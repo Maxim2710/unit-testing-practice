@@ -1,4 +1,4 @@
-package com.unit_testing_practice.unit_testing_practice;
+package com.unittestingpractice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
