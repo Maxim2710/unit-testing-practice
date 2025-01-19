@@ -80,4 +80,42 @@ public class StringProcessorTest {
 
         assertEquals("Input cannot be null", exception.getMessage());
     }
+
+    @Test
+    void testConcatenateValidInputs() {
+        String first = "Hello";
+        String second = "World";
+        String expected = "HelloWorld";
+
+        String result = stringProcessor.concatenate(first, second);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testConcatenateFirstInputNull() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stringProcessor.concatenate(null, "World");
+        });
+
+        assertEquals("Neither input can be null", exception.getMessage());
+    }
+
+    @Test
+    void testConcatenateSecondInputNull() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stringProcessor.concatenate("Hello", null);
+        });
+
+        assertEquals("Neither input can be null", exception.getMessage());
+    }
+
+    @Test
+    void testConcatenateBothInputsNull() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stringProcessor.concatenate(null, null);
+        });
+
+        assertEquals("Neither input can be null", exception.getMessage());
+    }
 }
