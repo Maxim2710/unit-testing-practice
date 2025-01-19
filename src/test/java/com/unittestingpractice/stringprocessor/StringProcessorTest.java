@@ -26,4 +26,23 @@ public class StringProcessorTest {
 
         assertEquals("Input cannot be null", exception.getMessage());
     }
+
+    @Test
+    void testReverse_ValidInput() {
+        String input = "hello";
+        String expected = "olleh";
+
+        String result = stringProcessor.reverse(input);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testReverse_NullInput() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stringProcessor.reverse(null);
+        });
+
+        assertEquals("Input cannot be null", exception.getMessage());
+    }
 }
