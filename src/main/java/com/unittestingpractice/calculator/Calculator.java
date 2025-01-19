@@ -7,15 +7,15 @@ public class Calculator {
     private RandomNumberProviderImpl randomNumberProvider;
 
     public int add(int a, int b) {
-        return a + b;
+        return Math.addExact(a, b);
     }
 
     public int subtract(int a, int b) {
-        return a - b;
+        return Math.subtractExact(a, b);
     }
 
     public int multiply(int a, int b) {
-        return a * b;
+        return Math.multiplyExact(a, b);
     }
 
     public int divide(int a, int b) {
