@@ -1,19 +1,31 @@
 package com.unittestingpractice.calculator;
 
+import com.unittestingpractice.interfaces.RandomNumberProvider;
+import com.unittestingpractice.provider.RandomNumberProviderImpl;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Duration;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
 class CalculatorTest {
 
-    private final Calculator calculator = new Calculator();
+    @Mock
+    private RandomNumberProviderImpl randomNumberProvider;
+
+    @InjectMocks
+    private Calculator calculator;
 
     @BeforeEach
     void setUp() {
@@ -328,5 +340,62 @@ class CalculatorTest {
     @ValueSource(ints = {1, 3, 5, 7, 9})
     void testOddNumbers(int number) {
         assertFalse(calculator.isEven(number), number + " должны быть нечетными");
+    }
+
+    // rand
+    @Test
+    void testAddWithRandom() {
+        int a = 10;
+        int randomValue = 5;
+
+        when(randomNumberProvider.getRandomNumber()).thenReturn(randomValue);
+
+        int result = calculator.addWithRandom(a);
+
+        assertEquals(a + randomValue, result);
+
+        verify(randomNumberProvider, times(1)).getRandomNumber();
+    }
+
+    @Test
+    void testAddWithRandomNegativeNumber() {
+        int a = -10;
+        int randomValue = 5;
+
+        when(randomNumberProvider.getRandomNumber()).thenReturn(randomValue);
+
+        int result = calculator.addWithRandom(a);
+
+        assertEquals(a + randomValue, result);
+
+        verify(randomNumberProvider, times(1)).getRandomNumber();
+    }
+
+    @Test
+    void testAddWithRandomZero() {
+        int a = 0;
+        int randomValue = 5;
+
+        when(randomNumberProvider.getRandomNumber()).thenReturn(randomValue);
+
+        int result = calculator.addWithRandom(a);
+
+        assertEquals(a + randomValue, result);
+
+        verify(randomNumberProvider, times(1)).getRandomNumber();
+    }
+
+    @Test
+    void testAddWithRandomRandomNumberIsZero() {
+        int a = 10;
+        int randomValue = 0;
+
+        when(randomNumberProvider.getRandomNumber()).thenReturn(randomValue);
+
+        int result = calculator.addWithRandom(a);
+
+        assertEquals(a + randomValue, result);
+
+        verify(randomNumberProvider, times(1)).getRandomNumber();
     }
 }
