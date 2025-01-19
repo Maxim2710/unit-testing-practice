@@ -1,6 +1,8 @@
 package com.unittestingpractice.calculator;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
 import java.util.stream.Stream;
@@ -301,5 +303,30 @@ class CalculatorTest {
                 () -> assertEquals(-5, calculator.divide(-10, 2), "-10 / 2 должно быть равно -5"),
                 () -> assertEquals(1, calculator.divide(5, 5), "5 / 5 должно быть равно 1")
         );
+    }
+
+    // isEven
+    @Test
+    @DisplayName("Тест для четного числа")
+    void testEvenNumber() {
+        assertTrue(calculator.isEven(2), "2 должна быть четной");
+    }
+
+    @Test
+    @DisplayName("Тест для нечетного числа")
+    void testOddNumber() {
+        assertFalse(calculator.isEven(3), "3 должна быть нечетной");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2, 4, 6, 8, 10})
+    void testEvenNumbers(int number) {
+        assertTrue(calculator.isEven(number), number + " должны быть четными");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 3, 5, 7, 9})
+    void testOddNumbers(int number) {
+        assertFalse(calculator.isEven(number), number + " должны быть нечетными");
     }
 }
