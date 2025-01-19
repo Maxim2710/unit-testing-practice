@@ -1,17 +1,27 @@
 package com.unittestingpractice.calculator;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CalculatorTest {
 
     private final Calculator calculator = new Calculator();
+
+    @BeforeEach
+    void setUp() {
+        System.out.println("Перед выполнением теста");
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println("После выполнения теста");
+    }
 
     // add
     @Test
@@ -225,5 +235,71 @@ class CalculatorTest {
             this.b = b;
             this.expected = expected;
         }
+    }
+
+    // divide
+    @Test
+    @DisplayName("Деление положительных чисел")
+    void testDividePositiveNumbers() {
+        int result = calculator.divide(10, 2);
+        assertEquals(5, result, "10 / 2 должно быть равно 5");
+    }
+
+    @Test
+    @DisplayName("Деление отрицательных чисел")
+    void testDivideNegativeNumbers() {
+        int result = calculator.divide(-10, -2);
+        assertEquals(5, result, "-10 / -2 должно быть равно 5");
+    }
+
+    @Test
+    @DisplayName("Деление положительного числа на отрицательное")
+    void testDividePositiveByNegative() {
+        int result = calculator.divide(10, -2);
+        assertEquals(-5, result, "10 / -2 должно быть равно -5");
+    }
+
+    @Test
+    @DisplayName("Деление на единицу")
+    void testDivideByOne() {
+        int result = calculator.divide(10, 1);
+        assertEquals(10, result, "10 / 1 должно быть равно 10");
+    }
+
+    @Test
+    @DisplayName("Исключение при делении на ноль")
+    void testDivideByZero() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> calculator.divide(10, 0),
+                "Ожидалось исключение IllegalArgumentException при делении на ноль");
+        assertEquals("Division by zero is not allowed", exception.getMessage());
+    }
+
+    @RepeatedTest(5)
+    @DisplayName("Повторное деление для проверки стабильности")
+    void testRepeatedDivide() {
+        int result = calculator.divide(20, 4);
+        assertEquals(5, result, "20 / 4 должно быть равно 5");
+    }
+
+    @Test
+    @Tag("performance")
+    @Timeout(1)
+    @DisplayName("Тест производительности деления")
+    void testDividePerformance() {
+        assertTimeoutPreemptively(Duration.ofMillis(500), () -> {
+            int result = calculator.divide(1000000, 1);
+            assertEquals(1000000, result);
+        }, "Тест должен выполняться менее чем за 500 мс");
+    }
+
+    @Test
+    @DisplayName("Групповая проверка деления с assertAll")
+    void testDivideWithAssertionsGroup() {
+        assertAll("Деление разных комбинаций чисел",
+                () -> assertEquals(5, calculator.divide(10, 2), "10 / 2 должно быть равно 5"),
+                () -> assertEquals(-5, calculator.divide(-10, 2), "-10 / 2 должно быть равно -5"),
+                () -> assertEquals(1, calculator.divide(5, 5), "5 / 5 должно быть равно 1")
+        );
     }
 }

@@ -23,7 +23,7 @@ public class Calculator {
             throw new IllegalArgumentException("Division by zero is not allowed");
         }
 
-        return a / b;
+        return Math.divideExact(a, b);
     }
 
     public boolean isEven(int number) {
