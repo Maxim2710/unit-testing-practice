@@ -2,14 +2,13 @@ package com.unittestingpractice.stringprocessor;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StringProcessorTest {
     private final StringProcessor stringProcessor = new StringProcessor();
 
     @Test
-    void testToUpperCase_ValidInput() {
+    void testToUpperCaseValidInput() {
         String input = "hello";
         String expected = "HELLO";
 
@@ -19,7 +18,7 @@ public class StringProcessorTest {
     }
 
     @Test
-    void testToUpperCase_NullInput() {
+    void testToUpperCaseNullInput() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             stringProcessor.toUpperCase(null);
         });
@@ -28,7 +27,7 @@ public class StringProcessorTest {
     }
 
     @Test
-    void testReverse_ValidInput() {
+    void testReverseValidInput() {
         String input = "hello";
         String expected = "olleh";
 
@@ -38,9 +37,45 @@ public class StringProcessorTest {
     }
 
     @Test
-    void testReverse_NullInput() {
+    void testReverseNullInput() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             stringProcessor.reverse(null);
+        });
+
+        assertEquals("Input cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testIsPalindromeValidPalindrome() {
+        String input = "madam";
+
+        boolean result = stringProcessor.isPalindrome(input);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void testIsPalindromeValidNonPalindrome() {
+        String input = "hello";
+
+        boolean result = stringProcessor.isPalindrome(input);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void testIsPalindromeWithSpacesAndCase() {
+        String input = "A man a plan a canal Panama";
+
+        boolean result = stringProcessor.isPalindrome(input);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void testIsPalindromeNullInput() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            stringProcessor.isPalindrome(null);
         });
 
         assertEquals("Input cannot be null", exception.getMessage());
