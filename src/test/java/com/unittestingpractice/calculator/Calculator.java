@@ -1,9 +1,13 @@
 package com.unittestingpractice.calculator;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.junit.jupiter.api.*;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 class CalculatorTest {
 
@@ -122,4 +126,104 @@ class CalculatorTest {
                 "Ожидалось ArithmeticException при переполнении");
     }
 
+    @Nested
+    @DisplayName("Тесты умножения обычных чисел")
+    class BasicMultiplicationTests {
+
+        @Test
+        @DisplayName("Умножение положительных чисел")
+        void testMultiplyPositiveNumbers() {
+            int result = calculator.multiply(5, 4);
+            assertEquals(20, result, "5 * 4 должно быть равно 20");
+        }
+
+        @Test
+        @DisplayName("Умножение отрицательных чисел")
+        void testMultiplyNegativeNumbers() {
+            int result = calculator.multiply(-5, -4);
+            assertEquals(20, result, "-5 * -4 должно быть равно 20");
+        }
+
+        @Test
+        @DisplayName("Умножение положительного числа на отрицательное")
+        void testMultiplyPositiveByNegative() {
+            int result = calculator.multiply(5, -4);
+            assertEquals(-20, result, "5 * -4 должно быть равно -20");
+        }
+
+        @Test
+        @DisplayName("Умножение на ноль")
+        void testMultiplyByZero() {
+            int result = calculator.multiply(5, 0);
+            assertEquals(0, result, "5 * 0 должно быть равно 0");
+        }
+
+        @Test
+        @DisplayName("Умножение нуля на любое число")
+        void testZeroTimesAnyNumber() {
+            int result = calculator.multiply(0, 5);
+            assertEquals(0, result, "0 * 5 должно быть равно 0");
+        }
+    }
+
+    @Nested
+    @DisplayName("Граничные случаи для умножения")
+    class BoundaryMultiplicationTests {
+        @Test
+        @DisplayName("Переполнение при умножении (Integer.MAX_VALUE * 2)")
+        void testMultiplyOverflow() {
+            assertThrows(ArithmeticException.class,
+                    () -> calculator.multiply(Integer.MAX_VALUE, 2),
+                    "Ожидалось ArithmeticException при переполнении");
+        }
+
+        @Test
+        @DisplayName("Переполнение при умножении (Integer.MIN_VALUE * -1)")
+        void testMultiplyUnderflow() {
+            assertThrows(ArithmeticException.class,
+                    () -> calculator.multiply(Integer.MIN_VALUE, -1),
+                    "Ожидалось ArithmeticException при переполнении");
+        }
+    }
+
+    @Nested
+    @DisplayName("Параметризованные тесты для умножения")
+    class ParameterizedMultiplicationTests {
+
+        @TestFactory
+        @DisplayName("Динамические тесты для умножения с набором входных данных")
+        Stream<DynamicTest> dynamicTestsForMultiply() {
+            return Stream.of(
+                    new TestCase(2, 3, 6),
+                    new TestCase(-2, 3, -6),
+                    new TestCase(0, 5, 0),
+                    new TestCase(-5, -5, 25)
+            ).map(tc -> DynamicTest.dynamicTest(
+                    String.format("Test: %d * %d = %d", tc.a, tc.b, tc.expected),
+                    () -> assertEquals(tc.expected, calculator.multiply(tc.a, tc.b))
+            ));
+        }
+    }
+
+    @Test
+    @DisplayName("Условное выполнение теста (assumeTrue)")
+    void testConditionalExecution() {
+        int a = 5;
+        int b = 10;
+        assumeTrue(a > 0 && b > 0, "Пропустить тест, если числа не положительные");
+        int result = calculator.multiply(a, b);
+        assertEquals(50, result, "5 * 10 должно быть равно 50");
+    }
+
+    private static class TestCase {
+        final int a;
+        final int b;
+        final int expected;
+
+        TestCase(int a, int b, int expected) {
+            this.a = a;
+            this.b = b;
+            this.expected = expected;
+        }
+    }
 }
