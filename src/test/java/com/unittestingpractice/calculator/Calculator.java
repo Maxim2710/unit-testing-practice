@@ -77,6 +77,49 @@ class CalculatorTest {
         assertEquals("integer overflow", exception.getMessage());
     }
 
+    // subtract
+    @Test
+    @DisplayName("Вычитание положительных чисел")
+    void testSubtractPositiveNumbers() {
+        int result = calculator.subtract(10, 5);
+        assertEquals(5, result, "10 - 5 должно быть равно 5");
+    }
 
+    @Test
+    @DisplayName("Вычитание отрицательных чисел")
+    void testSubtractNegativeNumbers() {
+        int result = calculator.subtract(-10, -5);
+        assertEquals(-5, result, "-10 - (-5) должно быть равно -5");
+    }
+
+    @Test
+    @DisplayName("Вычитание числа из самого себя")
+    void testSubtractNumberFromItself() {
+        int result = calculator.subtract(7, 7);
+        assertEquals(0, result, "7 - 7 должно быть равно 0");
+    }
+
+    @Test
+    @DisplayName("Вычитание с результатом в отрицательной области")
+    void testSubtractResultingInNegative() {
+        int result = calculator.subtract(5, 10);
+        assertEquals(-5, result, "5 - 10 должно быть равно -5");
+    }
+
+    @Test
+    @DisplayName("Граничный случай: переполнение при вычитании (Integer.MAX_VALUE - (-1))")
+    void testSubtractOverflow() {
+        assertThrows(ArithmeticException.class,
+                () -> calculator.subtract(Integer.MAX_VALUE, -1),
+                "Ожидалось ArithmeticException при переполнении");
+    }
+
+    @Test
+    @DisplayName("Граничный случай: переполнение при вычитании (Integer.MIN_VALUE - 1)")
+    void testSubtractUnderflow() {
+        assertThrows(ArithmeticException.class,
+                () -> calculator.subtract(Integer.MIN_VALUE, 1),
+                "Ожидалось ArithmeticException при переполнении");
+    }
 
 }
